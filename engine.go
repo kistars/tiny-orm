@@ -43,7 +43,8 @@ func NewMysql(Username string, Password string, Address string, Dbname string) (
 	}, nil
 }
 
-func (e *OrmEngine) Limit(name string) *OrmEngine {
+func (e *OrmEngine) Limit(param string) *OrmEngine {
+	e.LimitParam = param
 	return e
 }
 
