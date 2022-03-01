@@ -1,8 +1,11 @@
-package my_orm
+package orm
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"gopkg.in/yaml.v2"
+	"os"
 )
 
 type OrmEngine struct {
@@ -23,6 +26,25 @@ type OrmEngine struct {
 	Tx           *sql.Tx // 事务
 	GroupParam   string
 	HavingParam  string
+}
+
+var DB *OrmEngine
+
+func init() {
+	content, err := os.ReadFile("local.yaml")
+	if err != nil {
+		fmt.Println(err)
+		panic("config file not found")
+	}
+	kv := map[string]string{}
+	err = yaml.Unmarshal(content, &kv)
+	if err != nil {
+		panic("unmarshal failed")
+	}
+	DB, err = NewMysql(kv["username"], kv["password"], kv["address"], kv["dbname"])
+	if err != nil {
+		panic("open db failed")
+	}
 }
 
 //新建Mysql连接

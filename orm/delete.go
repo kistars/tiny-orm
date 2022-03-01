@@ -1,6 +1,8 @@
-package my_orm
+package orm
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 //删除
 func (e *OrmEngine) Delete() (int64, error) {

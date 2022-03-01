@@ -1,4 +1,4 @@
-package my_orm
+package orm
 
 //查询多条，返回值为map切片
 func (e *OrmEngine) Select() ([]map[string]string, error) {

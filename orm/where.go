@@ -1,4 +1,4 @@
-package my_orm
+package orm
 
 import (
 	"reflect"
