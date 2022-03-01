@@ -7,15 +7,15 @@ import (
 )
 
 func TestOrmEngine_Insert(t *testing.T) {
-	_, _ = DB.Table("user").Insert(User{
+	_, _ = Engine.Table("user").Insert(User{
 		Name: "Tom",
 		Age:  12,
 	})
 }
 
 func TestOrmEngine_Where(t *testing.T) {
-	DB.Table("userinfo").Where("username", "EE").OrWhere("departname", "22").OrWhere("status", 1)
-	fmt.Println(DB.WhereParam + DB.OrWhereParam)
+	Engine.Table("userinfo").Where("username", "EE").OrWhere("departname", "22").OrWhere("status", 1)
+	fmt.Println(Engine.WhereParam + Engine.OrWhereParam)
 }
 
 func TestOrmEngine_Select(t *testing.T) {

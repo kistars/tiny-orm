@@ -29,7 +29,8 @@ type OrmEngine struct {
 	HavingParam  string
 }
 
-var DB *OrmEngine
+var Engine *OrmEngine
+var DB *sql.DB
 
 func init() {
 	content, err := os.ReadFile("local.yaml")
@@ -42,7 +43,7 @@ func init() {
 	if err != nil {
 		panic("unmarshal failed")
 	}
-	DB, err = NewMysql(kv["username"], kv["password"], kv["address"], kv["dbname"])
+	Engine, err = NewMysql(kv["username"], kv["password"], kv["address"], kv["dbname"])
 	if err != nil {
 		panic("open db failed")
 	}
@@ -55,13 +56,14 @@ func NewMysql(Username string, Password string, Address string, Dbname string) (
 	if err != nil {
 		return nil, err
 	}
+	DB = db
 
 	//最大连接数等配置，先占个位
 	//db.SetMaxOpenConns(3)
 	//db.SetMaxIdleConns(3)
 
 	return &OrmEngine{
-		Db:         db,
+		Db:         DB,
 		FieldParam: "*",
 	}, nil
 }
@@ -99,5 +101,8 @@ func (e *OrmEngine) GetTable() string {
 
 //重置引擎
 func (e *OrmEngine) resetOrmEngine() {
-
+	e = &OrmEngine{
+		Db:         DB,
+		FieldParam: "*",
+	}
 }
