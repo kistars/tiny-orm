@@ -21,6 +21,16 @@ func (e *OrmEngine) Find(result interface{}) error {
 	//拼接sql
 	e.Prepare = "select * from " + e.GetTable()
 
+	//如果where不为空
+	if e.WhereParam != "" || e.OrWhereParam != "" {
+		e.Prepare += " where " + e.WhereParam + e.OrWhereParam
+	}
+
+	// limit不为空
+	if e.LimitParam != "" {
+		e.Prepare += " limit " + e.LimitParam
+	}
+
 	e.AllExec = e.WhereExec
 
 	//query
@@ -94,6 +104,30 @@ func (e *OrmEngine) Find(result interface{}) error {
 		destSlice.Set(reflect.Append(destSlice, dest))
 	}
 
+	return nil
+}
+
+//查询单条，返回值为struct切片
+func (e *OrmEngine) FindOne(result interface{}) error {
+
+	//取的原始值
+	dest := reflect.Indirect(reflect.ValueOf(result))
+
+	//new一个类型的切片
+	destSlice := reflect.New(reflect.SliceOf(dest.Type())).Elem()
+
+	//调用
+	if err := e.Limit(1).Find(destSlice.Addr().Interface()); err != nil {
+		return err
+	}
+
+	//判断返回值长度
+	if destSlice.Len() == 0 {
+		return e.setErrorInfo(errors.New("NOT FOUND"))
+	}
+
+	//取切片里的第0个数据，并复制给原始值结构体指针
+	dest.Set(destSlice.Index(0))
 	return nil
 }
 

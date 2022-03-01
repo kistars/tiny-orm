@@ -11,6 +11,11 @@ func (e *OrmEngine) Select() ([]map[string]string, error) {
 		e.Prepare += " where " + e.WhereParam + e.OrWhereParam
 	}
 
+	// limit不为空
+	if e.LimitParam != "" {
+		e.Prepare += " limit " + e.LimitParam
+	}
+
 	e.AllExec = e.WhereExec
 
 	//query
@@ -61,7 +66,7 @@ func (e *OrmEngine) Select() ([]map[string]string, error) {
 //查询1条
 func (e *OrmEngine) SelectOne() (map[string]string, error) {
 	//limit 1 单个查询
-	results, err := e.Limit("1").Select()
+	results, err := e.Limit(1).Select()
 	if err != nil {
 		return nil, e.setErrorInfo(err)
 	}

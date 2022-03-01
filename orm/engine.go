@@ -6,6 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/yaml.v2"
 	"os"
+	"strconv"
 )
 
 type OrmEngine struct {
@@ -65,8 +66,20 @@ func NewMysql(Username string, Password string, Address string, Dbname string) (
 	}, nil
 }
 
-func (e *OrmEngine) Limit(param string) *OrmEngine {
-	e.LimitParam = param
+func (e *OrmEngine) Limit(param ...int) *OrmEngine {
+	if len(param) == 1 {
+		e.LimitParam = strconv.Itoa(param[0])
+	} else if len(param) == 2 {
+		e.LimitParam = strconv.Itoa(param[0]) + "," + strconv.Itoa(param[1])
+	} else {
+		panic("invalid parameters")
+	}
+	return e
+}
+
+// 查询指定字段
+func (e *OrmEngine) Field(param string) *OrmEngine {
+	e.FieldParam = param
 	return e
 }
 
