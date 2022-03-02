@@ -31,6 +31,21 @@ func (e *OrmEngine) Find(result interface{}) error {
 		e.Prepare += " limit " + e.LimitParam
 	}
 
+	// order
+	if e.OrderParam != "" {
+		e.Prepare += " order by " + e.OrderParam
+	}
+
+	// group
+	if e.GroupParam != "" {
+		e.Prepare += " group by " + e.GroupParam
+	}
+
+	// having
+	if e.HavingParam != "" {
+		e.Prepare += " having " + e.HavingParam
+	}
+
 	e.AllExec = e.WhereExec
 
 	//query
