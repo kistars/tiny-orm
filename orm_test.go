@@ -16,6 +16,8 @@ func TestOrmEngine_Insert(t *testing.T) {
 		return
 	}
 	fmt.Println(n)
+	fmt.Println(Engine.GetLastSql())
+	// ig, rng, tes
 }
 
 func TestOrmEngine_Where(t *testing.T) {
