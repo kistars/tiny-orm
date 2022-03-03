@@ -78,7 +78,13 @@ func (e *OrmEngine) insertData(data interface{}, insertType string) (int64, erro
 	fmt.Println("exec =", e.AllExec)
 
 	//prepare
-	stmt, err := e.Db.Prepare(e.Prepare)
+	var stmt *sql.Stmt
+	var err error
+	if e.TransStatus == 1 {
+		stmt, err = e.Tx.Prepare(e.Prepare)
+	} else {
+		stmt, err = e.Db.Prepare(e.Prepare)
+	}
 	if err != nil {
 		return 0, e.setErrorInfo(err)
 	}

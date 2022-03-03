@@ -66,7 +66,11 @@ func (e *OrmEngine) Update(data ...interface{}) (int64, error) {
 	//prepare
 	var stmt *sql.Stmt
 	var err error
-	stmt, err = e.Db.Prepare(e.Prepare)
+	if e.TransStatus == 1 {
+		stmt, err = e.Tx.Prepare(e.Prepare)
+	} else {
+		stmt, err = e.Db.Prepare(e.Prepare)
+	}
 	if err != nil {
 		return 0, e.setErrorInfo(err)
 	}
