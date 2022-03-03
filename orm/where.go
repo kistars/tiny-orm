@@ -27,6 +27,14 @@ func (e *OrmEngine) Where(data ...interface{}) *OrmEngine {
 
 	//如果是结构体
 	if dataType == 1 {
+		/*
+				user := User{
+			    	Username:   "EE",
+			    	DepartName: "22",
+			    	Status:     1,
+			    }
+		*/
+
 		t := reflect.TypeOf(data[0])
 		v := reflect.ValueOf(data[0])
 
@@ -57,10 +65,16 @@ func (e *OrmEngine) Where(data ...interface{}) *OrmEngine {
 
 	} else if dataType == 2 {
 		//直接=的情况
+		//Where("uid", 1234)
 		e.WhereParam += data[0].(string) + " = ?) "
 		e.WhereExec = append(e.WhereExec, data[1])
 	} else if dataType == 3 {
 		//3个参数的情况
+		/*
+		  Where("uid", "=", 1234)
+		  Where("uid", ">=", 1234)
+		  Where("uid", "in", []int{2, 3, 4})
+		*/
 
 		//区分是操作符in的情况
 		data2 := strings.Trim(strings.ToLower(data[1].(string)), " ")
